@@ -1,0 +1,12 @@
+CREATE TABLE public.site_settings (id integer PRIMARY KEY DEFAULT 1 CHECK (id = 1), logo_url text);
+GRANT SELECT ON public.site_settings TO anon;
+GRANT SELECT, INSERT, UPDATE ON public.site_settings TO authenticated;
+GRANT ALL ON public.site_settings TO service_role;
+ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public logo settings read" ON public.site_settings FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Sole admin logo settings insert" ON public.site_settings FOR INSERT TO authenticated WITH CHECK (public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Sole admin logo settings update" ON public.site_settings FOR UPDATE TO authenticated USING (public.has_role(auth.uid(), 'admin')) WITH CHECK (public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Public site asset read" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'site-assets');
+CREATE POLICY "Sole admin site asset insert" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'site-assets' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Sole admin site asset update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'site-assets' AND public.has_role(auth.uid(), 'admin')) WITH CHECK (bucket_id = 'site-assets' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Sole admin site asset delete" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'site-assets' AND public.has_role(auth.uid(), 'admin'));
