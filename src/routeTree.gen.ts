@@ -21,6 +21,7 @@ import { Route as AdminContactRouteImport } from './routes/admin.contact'
 import { Route as AdminDistrictsRouteImport } from './routes/admin.districts'
 import { Route as AdminEnquiriesRouteImport } from './routes/admin.enquiries'
 import { Route as AdminExecutiveCommitteeRouteImport } from './routes/admin.executive-committee'
+import { Route as AdminLogoRouteImport } from './routes/admin.logo'
 import { Route as AdminNoticesRouteImport } from './routes/admin.notices'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as EventsIdRouteImport } from './routes/events.$id'
@@ -85,6 +86,11 @@ const AdminExecutiveCommitteeRoute = AdminExecutiveCommitteeRouteImport.update({
   path: '/executive-committee',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminLogoRoute = AdminLogoRouteImport.update({
+  id: '/logo',
+  path: '/logo',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminNoticesRoute = AdminNoticesRouteImport.update({
   id: '/notices',
   path: '/notices',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/admin/districts': typeof AdminDistrictsRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/executive-committee': typeof AdminExecutiveCommitteeRoute
+  '/admin/logo': typeof AdminLogoRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/events/$id': typeof EventsIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/admin/districts': typeof AdminDistrictsRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/executive-committee': typeof AdminExecutiveCommitteeRoute
+  '/admin/logo': typeof AdminLogoRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/events/$id': typeof EventsIdRoute
   '/admin': typeof AdminIndexRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/admin/districts': typeof AdminDistrictsRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/executive-committee': typeof AdminExecutiveCommitteeRoute
+  '/admin/logo': typeof AdminLogoRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/events/$id': typeof EventsIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/admin/districts'
     | '/admin/enquiries'
     | '/admin/executive-committee'
+    | '/admin/logo'
     | '/admin/notices'
     | '/events/$id'
     | '/admin/'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/admin/districts'
     | '/admin/enquiries'
     | '/admin/executive-committee'
+    | '/admin/logo'
     | '/admin/notices'
     | '/events/$id'
     | '/admin'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/admin/districts'
     | '/admin/enquiries'
     | '/admin/executive-committee'
+    | '/admin/logo'
     | '/admin/notices'
     | '/events/$id'
     | '/admin/'
@@ -302,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminExecutiveCommitteeRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/logo': {
+      id: '/admin/logo'
+      path: '/logo'
+      fullPath: '/admin/logo'
+      preLoaderRoute: typeof AdminLogoRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/notices': {
       id: '/admin/notices'
       path: '/notices'
@@ -332,6 +351,7 @@ interface AdminRouteChildren {
   AdminDistrictsRoute: typeof AdminDistrictsRoute
   AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminExecutiveCommitteeRoute: typeof AdminExecutiveCommitteeRoute
+  AdminLogoRoute: typeof AdminLogoRoute
   AdminNoticesRoute: typeof AdminNoticesRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -342,6 +362,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDistrictsRoute: AdminDistrictsRoute,
   AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminExecutiveCommitteeRoute: AdminExecutiveCommitteeRoute,
+  AdminLogoRoute: AdminLogoRoute,
   AdminNoticesRoute: AdminNoticesRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
