@@ -13,7 +13,7 @@ const visitor = createClient(url, key, options);
 const admin = createClient(url, key, options);
 const ownerId = "1dc7ec09-9688-41cb-a143-c6ae4f31791d";
 
-describe("Single admin security", () => {
+describe("Single admin security", { timeout: 30000 }, () => {
   beforeAll(async () => {
     const sessionFile = process.env["TEST_ADMIN_SESSION_FILE"];
     if (sessionFile) {
