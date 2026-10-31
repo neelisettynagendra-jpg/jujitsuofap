@@ -1,3 +1,6 @@
+- [ ] Add per-page SEO, crawler access, sitemap, and descriptive image alternatives.
+- [ ] Add sole-admin website logo uploads, shared logo settings, favicon, and share-image support.
+- [ ] Verify SEO and authenticated logo save/readback, including visitor restrictions.
 - [x] Verify the designated admin account and password.
 - [x] Restrict admin roles and data/image editing to this account.
 - [x] Confirm public sign-up is disabled and verify access rules.
