@@ -1,3 +1,5 @@
+import { getPublicSEO } from "@/lib/seo.functions";
+import { pageSEO } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, CalendarDays } from "lucide-react";
@@ -5,16 +7,9 @@ import { eventQuery, formatDate } from "@/lib/queries";
 import { Empty, ErrorState, Loading } from "@/components/site/States";
 
 export const Route = createFileRoute("/events/$id")({
-  head: () => ({
-    meta: [
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { title: "Event Details — Ju Jitsu Association of Andhra Pradesh" },
-      { name: "description", content: "Event details from the Ju Jitsu Association of Andhra Pradesh." },
-      { property: "og:title", content: "Event Details — Ju Jitsu AP" },
-      { property: "og:description", content: "Event details from the Ju Jitsu Association of Andhra Pradesh." },
-    ],
-  }),
+  staticData: { sitemap: false },
+  loader: ({ params }) => getPublicSEO({ data: { eventId: params.id } }),
+  head: ({ loaderData, params }) => pageSEO(`/events/${params.id}`, loaderData?.event?.title ? `${loaderData.event.title} — Ju Jitsu AP` : "Event Details — Ju Jitsu Association of Andhra Pradesh", loaderData?.event?.description?.slice(0, 160) || "Ju Jitsu Andhra Pradesh event information, dates and updates from the Jiu Jitsu Association AP.", loaderData?.logo, loaderData?.event?.image_url),
   component: EventDetail,
 });
 

@@ -1,15 +1,17 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Session } from "@supabase/supabase-js";
-import { CalendarDays, ExternalLink, Info, Loader2, LogOut, Megaphone, Menu, MessageSquare, Phone, Users, X } from "lucide-react";
+import { CalendarDays, ExternalLink, Image, Info, Loader2, LogOut, Megaphone, Menu, MessageSquare, Phone, Users, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/association-logo.jpeg.asset.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { siteSettingsQuery } from "@/lib/site-settings";
 
 export const Route = createFileRoute("/admin")({
+  staticData: { sitemap: "exclude-subtree" },
   ssr: false,
   head: () => ({
     meta: [
@@ -33,6 +35,7 @@ const LINKS = [
   { to: "/admin/about", label: "About Page", icon: Info },
   { to: "/admin/contact", label: "Contact Details", icon: Phone },
   { to: "/admin/enquiries", label: "Enquiries", icon: MessageSquare },
+  { to: "/admin/logo", label: "Website Logo", icon: Image },
 ] as const;
 
 type Status = "loading" | "signedOut" | "notAdmin" | "admin";
@@ -127,9 +130,10 @@ function AdminLayout() {
 }
 
 function SidebarHead() {
+  const { data } = useQuery(siteSettingsQuery);
   return (
     <div className="flex items-center gap-2 border-b border-sidebar-border p-4">
-      <img src={logo.url} alt="" className="h-10 w-10 rounded-full bg-card object-contain p-0.5" />
+      <img src={data?.logo_url || logo.url} alt="Association logo" className="h-10 w-10 rounded-full bg-card object-contain p-0.5" />
       <div>
         <p className="text-sm font-bold text-sidebar-foreground">Admin Panel</p>
         <p className="text-xs text-sidebar-foreground/70">Ju Jitsu AP</p>
@@ -139,6 +143,7 @@ function SidebarHead() {
 }
 
 function AdminLogin() {
+  const { data } = useQuery(siteSettingsQuery);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
@@ -157,7 +162,7 @@ function AdminLogin() {
     <div className="flex min-h-screen items-center justify-center bg-secondary p-4">
       <form onSubmit={submit} className="w-full max-w-sm space-y-4 rounded-md border-t-4 border-saffron bg-card p-6 shadow-card">
         <div className="text-center">
-          <img src={logo.url} alt="" className="mx-auto h-16 w-16 object-contain" />
+          <img src={data?.logo_url || logo.url} alt="Association logo" className="mx-auto h-16 w-16 object-contain" />
           <h1 className="mt-2 text-xl font-bold text-primary">Admin Login</h1>
           <p className="text-sm text-muted-foreground">Ju Jitsu Association of Andhra Pradesh</p>
         </div>

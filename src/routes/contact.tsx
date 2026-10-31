@@ -1,3 +1,5 @@
+import { getPublicSEO } from "@/lib/seo.functions";
+import { pageSEO } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -13,16 +15,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { title: "Contact Us — Ju Jitsu Association of Andhra Pradesh" },
-      { name: "description", content: "Address, phone numbers, email and enquiry form for the Ju Jitsu Association of Andhra Pradesh." },
-      { property: "og:title", content: "Contact the Ju Jitsu Association of Andhra Pradesh" },
-      { property: "og:description", content: "Reach the association office or send an enquiry." },
-    ],
-  }),
+  staticData: { sitemap: true },
+  loader: () => getPublicSEO({ data: {} }),
+  head: ({ loaderData }) => pageSEO("/contact", "Contact Us — Ju Jitsu Association of Andhra Pradesh", "Contact Ju Jitsu Andhra Pradesh for district enquiries, events and association information. Reach the Jiu Jitsu Association AP by phone, email or enquiry.", loaderData?.logo),
   component: Contact,
 });
 

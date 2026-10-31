@@ -1,3 +1,5 @@
+import { getPublicSEO } from "@/lib/seo.functions";
+import { pageSEO } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -6,16 +8,9 @@ import { Empty, ErrorState, Loading, PageTitle } from "@/components/site/States"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { title: "About Us — Ju Jitsu Association of Andhra Pradesh" },
-      { name: "description", content: "History, mission, office bearers and photo gallery of the Ju Jitsu Association of Andhra Pradesh." },
-      { property: "og:title", content: "About the Ju Jitsu Association of Andhra Pradesh" },
-      { property: "og:description", content: "History, mission, office bearers and photo gallery." },
-    ],
-  }),
+  staticData: { sitemap: true },
+  loader: () => getPublicSEO({ data: {} }),
+  head: ({ loaderData }) => pageSEO("/about", "About — Ju Jitsu Association of Andhra Pradesh", "Learn the history, mission and leadership of Ju Jitsu Andhra Pradesh, with office bearers and photos from the Jiu Jitsu Association AP.", loaderData?.logo),
   component: About,
 });
 
@@ -104,7 +99,7 @@ function About() {
       <Dialog open={!!preview} onOpenChange={(o) => !o && setPreview(null)}>
         <DialogContent className="max-w-3xl p-2">
           <DialogTitle className="sr-only">{preview?.caption || "Photo"}</DialogTitle>
-          {preview && <img src={preview.url} alt={preview.caption} className="max-h-[80vh] w-full rounded object-contain" />}
+          {preview && <img src={preview.url} alt={preview.caption || "Association gallery photo"} className="max-h-[80vh] w-full rounded object-contain" />}
           {preview?.caption && <p className="px-2 pb-2 text-sm">{preview.caption}</p>}
         </DialogContent>
       </Dialog>

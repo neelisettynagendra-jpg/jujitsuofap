@@ -15,12 +15,14 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DistrictsRouteImport } from './routes/districts'
 import { Route as ExecutiveCommitteeRouteImport } from './routes/executive-committee'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAboutRouteImport } from './routes/admin.about'
 import { Route as AdminContactRouteImport } from './routes/admin.contact'
 import { Route as AdminDistrictsRouteImport } from './routes/admin.districts'
 import { Route as AdminEnquiriesRouteImport } from './routes/admin.enquiries'
 import { Route as AdminExecutiveCommitteeRouteImport } from './routes/admin.executive-committee'
+import { Route as AdminLogoRouteImport } from './routes/admin.logo'
 import { Route as AdminNoticesRouteImport } from './routes/admin.notices'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as EventsIdRouteImport } from './routes/events.$id'
@@ -55,6 +57,11 @@ const ExecutiveCommitteeRoute = ExecutiveCommitteeRouteImport.update({
   path: '/executive-committee',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -85,6 +92,11 @@ const AdminExecutiveCommitteeRoute = AdminExecutiveCommitteeRouteImport.update({
   path: '/executive-committee',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminLogoRoute = AdminLogoRouteImport.update({
+  id: '/logo',
+  path: '/logo',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminNoticesRoute = AdminNoticesRouteImport.update({
   id: '/notices',
   path: '/notices',
@@ -108,11 +120,13 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/districts': typeof DistrictsRoute
   '/executive-committee': typeof ExecutiveCommitteeRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/contact': typeof AdminContactRoute
   '/admin/districts': typeof AdminDistrictsRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/executive-committee': typeof AdminExecutiveCommitteeRoute
+  '/admin/logo': typeof AdminLogoRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/events/$id': typeof EventsIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -124,11 +138,13 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/districts': typeof DistrictsRoute
   '/executive-committee': typeof ExecutiveCommitteeRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/contact': typeof AdminContactRoute
   '/admin/districts': typeof AdminDistrictsRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/executive-committee': typeof AdminExecutiveCommitteeRoute
+  '/admin/logo': typeof AdminLogoRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/events/$id': typeof EventsIdRoute
   '/admin': typeof AdminIndexRoute
@@ -142,11 +158,13 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/districts': typeof DistrictsRoute
   '/executive-committee': typeof ExecutiveCommitteeRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/contact': typeof AdminContactRoute
   '/admin/districts': typeof AdminDistrictsRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/executive-committee': typeof AdminExecutiveCommitteeRoute
+  '/admin/logo': typeof AdminLogoRoute
   '/admin/notices': typeof AdminNoticesRoute
   '/events/$id': typeof EventsIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -161,11 +179,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/districts'
     | '/executive-committee'
+    | '/sitemap.xml'
     | '/admin/about'
     | '/admin/contact'
     | '/admin/districts'
     | '/admin/enquiries'
     | '/admin/executive-committee'
+    | '/admin/logo'
     | '/admin/notices'
     | '/events/$id'
     | '/admin/'
@@ -177,11 +197,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/districts'
     | '/executive-committee'
+    | '/sitemap.xml'
     | '/admin/about'
     | '/admin/contact'
     | '/admin/districts'
     | '/admin/enquiries'
     | '/admin/executive-committee'
+    | '/admin/logo'
     | '/admin/notices'
     | '/events/$id'
     | '/admin'
@@ -194,11 +216,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/districts'
     | '/executive-committee'
+    | '/sitemap.xml'
     | '/admin/about'
     | '/admin/contact'
     | '/admin/districts'
     | '/admin/enquiries'
     | '/admin/executive-committee'
+    | '/admin/logo'
     | '/admin/notices'
     | '/events/$id'
     | '/admin/'
@@ -212,6 +236,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DistrictsRoute: typeof DistrictsRoute
   ExecutiveCommitteeRoute: typeof ExecutiveCommitteeRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   EventsIdRoute: typeof EventsIdRoute
   EventsIndexRoute: typeof EventsIndexRoute
 }
@@ -260,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExecutiveCommitteeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -302,6 +334,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminExecutiveCommitteeRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/logo': {
+      id: '/admin/logo'
+      path: '/logo'
+      fullPath: '/admin/logo'
+      preLoaderRoute: typeof AdminLogoRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/notices': {
       id: '/admin/notices'
       path: '/notices'
@@ -332,6 +371,7 @@ interface AdminRouteChildren {
   AdminDistrictsRoute: typeof AdminDistrictsRoute
   AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminExecutiveCommitteeRoute: typeof AdminExecutiveCommitteeRoute
+  AdminLogoRoute: typeof AdminLogoRoute
   AdminNoticesRoute: typeof AdminNoticesRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -342,6 +382,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDistrictsRoute: AdminDistrictsRoute,
   AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminExecutiveCommitteeRoute: AdminExecutiveCommitteeRoute,
+  AdminLogoRoute: AdminLogoRoute,
   AdminNoticesRoute: AdminNoticesRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -355,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DistrictsRoute: DistrictsRoute,
   ExecutiveCommitteeRoute: ExecutiveCommitteeRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   EventsIdRoute: EventsIdRoute,
   EventsIndexRoute: EventsIndexRoute,
 }

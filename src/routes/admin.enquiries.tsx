@@ -9,6 +9,7 @@ import { Empty, ErrorState, Loading } from "@/components/site/States";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin/enquiries")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [
     { title: "Manage Enquiries — Ju Jitsu AP" },
     { name: "description", content: "Review association enquiries." },

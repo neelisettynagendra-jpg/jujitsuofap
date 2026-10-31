@@ -1,16 +1,13 @@
+import { getPublicSEO } from "@/lib/seo.functions";
+import { pageSEO } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useExecutiveMembers } from "@/hooks/use-executive-members";
 import { Empty, ErrorState, Loading, PageTitle } from "@/components/site/States";
 
 export const Route = createFileRoute("/executive-committee")({
-  head: () => ({ meta: [
-    { title: "Executive Committee — Ju Jitsu Association of Andhra Pradesh" },
-    { name: "description", content: "Meet the Executive Committee of the Ju Jitsu Association of Andhra Pradesh." },
-    { property: "og:title", content: "Executive Committee — Ju Jitsu AP" },
-    { property: "og:description", content: "Meet the association's executive members and their roles." },
-    { property: "og:type", content: "website" },
-    { name: "twitter:card", content: "summary_large_image" },
-  ] }),
+  staticData: { sitemap: true },
+  loader: () => getPublicSEO({ data: {} }),
+  head: ({ loaderData }) => pageSEO("/executive-committee", "Executive Committee — Ju Jitsu Association of Andhra Pradesh", "Meet the Ju Jitsu Andhra Pradesh Executive Committee and discover the names and roles of the official Jiu Jitsu Association AP leadership.", loaderData?.logo),
   component: ExecutiveCommittee,
 });
 

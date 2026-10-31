@@ -5,6 +5,7 @@ import { Lock, Mail, MapPin, Menu, Phone, X } from "lucide-react";
 import logo from "@/assets/association-logo.jpeg.asset.json";
 import { contactQuery } from "@/lib/queries";
 import { NoticeTicker } from "./NoticeTicker";
+import { siteSettingsQuery } from "@/lib/site-settings";
 
 export const NAV = [
   { to: "/", label: "Home" },
@@ -18,6 +19,8 @@ export const NAV = [
 export function SiteLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const { data: contact } = useQuery(contactQuery);
+  const { data: settings } = useQuery(siteSettingsQuery);
+  const logoUrl = settings?.logo_url || logo.url;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -26,7 +29,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       <header className="border-b bg-card">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
           <Link to="/" className="flex min-w-0 items-center gap-3">
-            <img src={logo.url} alt="Association emblem" width={56} height={56} className="h-12 w-12 shrink-0 object-contain md:h-16 md:w-16" />
+            <img src={logoUrl} alt="Ju Jitsu Association of Andhra Pradesh logo" width={56} height={56} className="h-12 w-12 shrink-0 object-contain md:h-16 md:w-16" />
             <div className="min-w-0">
               <p className="font-serif text-sm font-bold leading-tight text-primary sm:text-base md:text-xl">
                 JU JITSU ASSOCIATION OF ANDHRA PRADESH
@@ -84,7 +87,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-3">
           <div>
             <div className="flex items-center gap-3">
-              <img src={logo.url} alt="" width={44} height={44} loading="lazy" className="h-11 w-11 rounded-full bg-card object-contain p-0.5" />
+              <img src={logoUrl} alt="Ju Jitsu Association of Andhra Pradesh logo" width={44} height={44} loading="lazy" className="h-11 w-11 rounded-full bg-card object-contain p-0.5" />
               <p className="font-serif font-bold text-primary-foreground">Ju Jitsu Association of Andhra Pradesh</p>
             </div>
             <p className="mt-3 text-sm">Promoting discipline, fitness and self-defence through Ju Jitsu across every district of the state.</p>

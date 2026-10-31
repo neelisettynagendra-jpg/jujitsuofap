@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/admin/")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [
     { title: "Manage Events — Ju Jitsu AP" },
     { name: "description", content: "Manage association event updates." },
@@ -80,7 +81,7 @@ function AdminEvents() {
         <div className="space-y-3">
           {data.map((e) => (
             <div key={e.id} className="flex gap-3 rounded-md border bg-card p-3 shadow-card">
-              {e.image_url ? <img src={e.image_url} alt="" className="h-16 w-20 shrink-0 rounded object-cover" /> : <div className="h-16 w-20 shrink-0 rounded bg-secondary" />}
+              {e.image_url ? <img src={e.image_url} alt={e.title} className="h-16 w-20 shrink-0 rounded object-cover" /> : <div className="h-16 w-20 shrink-0 rounded bg-secondary" />}
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-muted-foreground">{formatDate(e.event_date)}</p>
                 <p className="truncate font-semibold">{e.title}</p>

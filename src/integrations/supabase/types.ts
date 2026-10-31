@@ -266,6 +266,21 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          id: number
+          logo_url: string | null
+        }
+        Insert: {
+          id?: number
+          logo_url?: string | null
+        }
+        Update: {
+          id?: number
+          logo_url?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string

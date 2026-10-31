@@ -29,6 +29,13 @@
       "when": 1792925615907,
       "tag": "0003_district_leadership_executive_committee",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793465292551,
+      "tag": "0004_website_logo_settings",
+      "breakpoints": true
     }
   ]
 }
