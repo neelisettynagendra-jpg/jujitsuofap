@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/admin/contact")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [
     { title: "Manage Contact Details — Ju Jitsu AP" },
     { name: "description", content: "Manage association contact information." },

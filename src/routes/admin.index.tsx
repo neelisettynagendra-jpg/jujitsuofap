@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/admin/")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [
     { title: "Manage Events — Ju Jitsu AP" },
     { name: "description", content: "Manage association event updates." },

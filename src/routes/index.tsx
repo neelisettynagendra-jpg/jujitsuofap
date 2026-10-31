@@ -1,3 +1,5 @@
+import { getPublicSEO } from "@/lib/seo.functions";
+import { pageSEO, HOME_DESCRIPTION } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, Info, Phone, Users } from "lucide-react";
@@ -8,16 +10,9 @@ import { Empty, ErrorState, Loading } from "@/components/site/States";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { title: "Ju Jitsu Association of Andhra Pradesh — Official Website" },
-      { name: "description", content: "Official state body promoting Ju Jitsu across all districts of Andhra Pradesh. Latest events, notices and district contacts." },
-      { property: "og:title", content: "Ju Jitsu Association of Andhra Pradesh" },
-      { property: "og:description", content: "Official state body promoting Ju Jitsu across all districts of Andhra Pradesh." },
-    ],
-  }),
+  staticData: { sitemap: true },
+  loader: () => getPublicSEO({ data: { home: true } }),
+  head: ({ loaderData }) => pageSEO("/", "Ju Jitsu Association of Andhra Pradesh", HOME_DESCRIPTION, loaderData?.logo, loaderData?.banner),
   component: Home,
 });
 

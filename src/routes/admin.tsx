@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { siteSettingsQuery } from "@/lib/site-settings";
 
 export const Route = createFileRoute("/admin")({
+  staticData: { sitemap: "exclude-subtree" },
   ssr: false,
   head: () => ({
     meta: [

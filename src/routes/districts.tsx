@@ -1,3 +1,5 @@
+import { getPublicSEO } from "@/lib/seo.functions";
+import { pageSEO } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -7,16 +9,9 @@ import { Empty, ErrorState, Loading, PageTitle } from "@/components/site/States"
 import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/districts")({
-  head: () => ({
-    meta: [
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { title: "District Members — Ju Jitsu Association of Andhra Pradesh" },
-      { name: "description", content: "Find district Ju Jitsu units and coordinator contacts across Andhra Pradesh." },
-      { property: "og:title", content: "District Members — Ju Jitsu AP" },
-      { property: "og:description", content: "District units and coordinator contacts across Andhra Pradesh." },
-    ],
-  }),
+  staticData: { sitemap: true },
+  loader: () => getPublicSEO({ data: {} }),
+  head: ({ loaderData }) => pageSEO("/districts", "District Members — Ju Jitsu Association of Andhra Pradesh", "Find Ju Jitsu Andhra Pradesh district units, presidents, secretaries and coordinator contacts through the official Jiu Jitsu Association AP.", loaderData?.logo),
   component: Districts,
 });
 

@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 
 export const Route = createFileRoute("/admin/notices")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [
     { title: "Manage Notices — Ju Jitsu AP" },
     { name: "description", content: "Manage association notices." },

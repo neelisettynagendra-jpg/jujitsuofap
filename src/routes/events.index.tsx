@@ -1,3 +1,5 @@
+import { getPublicSEO } from "@/lib/seo.functions";
+import { pageSEO } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { eventsQuery } from "@/lib/queries";
@@ -5,16 +7,9 @@ import { EventCard } from "@/components/site/EventCard";
 import { Empty, ErrorState, Loading, PageTitle } from "@/components/site/States";
 
 export const Route = createFileRoute("/events/")({
-  head: () => ({
-    meta: [
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { title: "Event Updates — Ju Jitsu Association of Andhra Pradesh" },
-      { name: "description", content: "Championships, camps and seminars organised by the Ju Jitsu Association of Andhra Pradesh." },
-      { property: "og:title", content: "Event Updates — Ju Jitsu AP" },
-      { property: "og:description", content: "Championships, camps and seminars across Andhra Pradesh." },
-    ],
-  }),
+  staticData: { sitemap: true },
+  loader: () => getPublicSEO({ data: {} }),
+  head: ({ loaderData }) => pageSEO("/events", "Event Updates — Ju Jitsu Association of Andhra Pradesh", "Explore Ju Jitsu Andhra Pradesh championships, training camps, seminars and announcements from the official Jiu Jitsu Association AP.", loaderData?.logo),
   component: Events,
 });
 

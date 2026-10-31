@@ -10,6 +10,7 @@ import { DEFAULT_LOGO_URL, saveWebsiteLogo, siteSettingsQuery } from "@/lib/site
 import { validateLogo, validateSVG } from "@/lib/logo-validation";
 
 export const Route = createFileRoute("/admin/logo")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [
     { title: "Website Logo — Ju Jitsu AP" },
     { name: "description", content: "Manage the association website logo." },

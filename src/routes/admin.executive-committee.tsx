@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/admin/executive-committee")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [
     { title: "Manage Executive Committee — Ju Jitsu AP" },
     { name: "description", content: "Manage the association's executive members and display order." },
