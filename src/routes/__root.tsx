@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
@@ -15,6 +15,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Toaster } from "@/components/ui/sonner";
+import { siteSettingsQuery } from "@/lib/site-settings";
 
 function NotFoundComponent() {
   return (
@@ -67,14 +68,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Ju Jitsu Association of Andhra Pradesh" },
-      { name: "description", content: "Official website of the Ju Jitsu Association of Andhra Pradesh." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -113,6 +111,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <LogoFavicon />
       {isAdmin ? (
         <Outlet />
       ) : (
@@ -123,4 +122,14 @@ function RootComponent() {
       <Toaster richColors position="top-center" />
     </QueryClientProvider>
   );
+}
+
+function LogoFavicon() {
+  const { data } = useQuery(siteSettingsQuery);
+  useEffect(() => {
+    let link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
+    link.href = data?.logo_url || "/favicon.png";
+  }, [data?.logo_url]);
+  return null;
 }

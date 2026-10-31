@@ -104,7 +104,7 @@ function About() {
       <Dialog open={!!preview} onOpenChange={(o) => !o && setPreview(null)}>
         <DialogContent className="max-w-3xl p-2">
           <DialogTitle className="sr-only">{preview?.caption || "Photo"}</DialogTitle>
-          {preview && <img src={preview.url} alt={preview.caption} className="max-h-[80vh] w-full rounded object-contain" />}
+          {preview && <img src={preview.url} alt={preview.caption || "Association gallery photo"} className="max-h-[80vh] w-full rounded object-contain" />}
           {preview?.caption && <p className="px-2 pb-2 text-sm">{preview.caption}</p>}
         </DialogContent>
       </Dialog>

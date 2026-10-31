@@ -16,7 +16,7 @@ export function EventCard({ event }: { event: Tables<"events"> }) {
           <img src={event.image_url} alt={event.title} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <img src={emblem} alt="" className="h-20 w-20 opacity-40" loading="lazy" />
+            <img src={emblem} alt="Ju Jitsu event emblem" className="h-20 w-20 opacity-40" loading="lazy" />
           </div>
         )}
       </div>

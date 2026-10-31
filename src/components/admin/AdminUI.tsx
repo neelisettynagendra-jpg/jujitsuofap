@@ -70,7 +70,7 @@ export function ImageUpload({ value, folder, onChange }: { value: string | null;
   }
   return (
     <div className="space-y-2">
-      {value && <img src={value} alt="" className="aspect-video w-full rounded-md border object-cover" />}
+      {value && <img src={value} alt="Uploaded image preview" className="aspect-video w-full rounded-md border object-cover" />}
       <div className="flex gap-2">
         <Button type="button" variant="outline" size="sm" onClick={() => ref.current?.click()} disabled={busy}>
           {busy ? <Loader2 className="animate-spin" /> : <ImagePlus />} {value ? "Change image" : "Upload image"}

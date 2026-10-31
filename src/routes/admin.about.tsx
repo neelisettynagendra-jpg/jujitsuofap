@@ -178,7 +178,7 @@ function GallerySection() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {data.map((g) => (
             <div key={g.id} className="relative overflow-hidden rounded-md border">
-              <img src={g.image_url} alt={g.caption} className="aspect-square w-full object-cover" loading="lazy" />
+              <img src={g.image_url} alt={g.caption || "Association gallery photo"} className="aspect-square w-full object-cover" loading="lazy" />
               {g.caption && <p className="truncate px-2 py-1 text-xs">{g.caption}</p>}
               <ConfirmDelete onConfirm={() => del(g.id, g.storage_path)}>
                 <Button size="icon" variant="destructive" className="absolute right-1.5 top-1.5 h-8 w-8" aria-label="Delete photo"><Trash2 /></Button>
