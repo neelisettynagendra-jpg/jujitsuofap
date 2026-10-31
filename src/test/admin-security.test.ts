@@ -63,6 +63,38 @@ describe("Single admin security", () => {
     expect(error).not.toBeNull();
   });
 
+  it("allows public logo reads but only the sole admin can save logo settings", async () => {
+    const original = await admin.from("site_settings").select("logo_url").eq("id", 1).maybeSingle();
+    expect(original.error).toBeNull();
+    const denied = await visitor.from("site_settings").upsert({ id: 1, logo_url: "https://example.com/unauthorized.png" });
+    expect(denied.error?.code).toBe("42501");
+    try {
+      const saved = await admin.from("site_settings").upsert({ id: 1, logo_url: original.data?.logo_url ?? null }).select("logo_url").single();
+      expect(saved.error).toBeNull();
+      const read = await visitor.from("site_settings").select("logo_url").eq("id", 1).single();
+      expect(read.error).toBeNull();
+      expect(read.data?.logo_url).toBe(original.data?.logo_url ?? null);
+      const update = await visitor.from("site_settings").update({ logo_url: "https://example.com/unauthorized.png" }).eq("id", 1).select("id");
+      expect(update.error !== null || update.data?.length === 0).toBe(true);
+    } finally {
+      await admin.from("site_settings").upsert({ id: 1, logo_url: original.data?.logo_url ?? null });
+    }
+  });
+
+  it("allows admin logo uploads and replacement, public reads, and rejects visitor uploads", async () => {
+    const path = `security-test/${crypto.randomUUID()}.png`;
+    const bytes = new Uint8Array([137, 80, 78, 71]);
+    expect((await visitor.storage.from("site-assets").upload(path, bytes, { contentType: "image/png" })).error).not.toBeNull();
+    try {
+      expect((await admin.storage.from("site-assets").upload(path, bytes, { contentType: "image/png" })).error).toBeNull();
+      expect((await admin.storage.from("site-assets").update(path, bytes, { contentType: "image/png" })).error).toBeNull();
+      expect((await visitor.storage.from("site-assets").download(path)).error).toBeNull();
+      expect((await visitor.storage.from("site-assets").update(path, bytes, { contentType: "image/png" })).error).not.toBeNull();
+    } finally {
+      expect((await admin.storage.from("site-assets").remove([path])).error).toBeNull();
+    }
+  });
+
   it("allows the sole admin to add, edit and delete content", async () => {
     const created = await admin.from("notices").insert({ message: "Temporary security check", is_active: false }).select("id").single();
     expect(created.error).toBeNull();

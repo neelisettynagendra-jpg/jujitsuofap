@@ -17,6 +17,7 @@ export function validateSVG(text: string) {
   for (const element of Array.from(doc.querySelectorAll("*"))) {
     if (!allowed.has(element.localName)) throw new Error("SVG contains unsupported or unsafe content. Use PNG, JPG or WebP instead.");
     for (const attribute of Array.from(element.attributes)) {
+      if (attribute.name === "xmlns" || attribute.name === "xmlns:xlink") continue;
       if (/^on/i.test(attribute.name) || ((attribute.localName === "href") && !attribute.value.startsWith("#")) || /(?:javascript:|data:|https?:|\/\/|@import)/i.test(attribute.value)) {
         throw new Error("SVG must not contain scripts or external resources.");
       }
