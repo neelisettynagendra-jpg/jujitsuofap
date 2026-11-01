@@ -15,6 +15,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DistrictsRouteImport } from './routes/districts'
 import { Route as ExecutiveCommitteeRouteImport } from './routes/executive-committee'
+import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAboutRouteImport } from './routes/admin.about'
@@ -55,6 +56,11 @@ const DistrictsRoute = DistrictsRouteImport.update({
 const ExecutiveCommitteeRoute = ExecutiveCommitteeRouteImport.update({
   id: '/executive-committee',
   path: '/executive-committee',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/districts': typeof DistrictsRoute
   '/executive-committee': typeof ExecutiveCommitteeRoute
+  '/gallery': typeof GalleryRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/contact': typeof AdminContactRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/districts': typeof DistrictsRoute
   '/executive-committee': typeof ExecutiveCommitteeRoute
+  '/gallery': typeof GalleryRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/contact': typeof AdminContactRoute
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/districts': typeof DistrictsRoute
   '/executive-committee': typeof ExecutiveCommitteeRoute
+  '/gallery': typeof GalleryRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/contact': typeof AdminContactRoute
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/districts'
     | '/executive-committee'
+    | '/gallery'
     | '/sitemap.xml'
     | '/admin/about'
     | '/admin/contact'
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/districts'
     | '/executive-committee'
+    | '/gallery'
     | '/sitemap.xml'
     | '/admin/about'
     | '/admin/contact'
@@ -216,6 +227,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/districts'
     | '/executive-committee'
+    | '/gallery'
     | '/sitemap.xml'
     | '/admin/about'
     | '/admin/contact'
@@ -236,6 +248,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DistrictsRoute: typeof DistrictsRoute
   ExecutiveCommitteeRoute: typeof ExecutiveCommitteeRoute
+  GalleryRoute: typeof GalleryRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   EventsIdRoute: typeof EventsIdRoute
   EventsIndexRoute: typeof EventsIndexRoute
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       path: '/executive-committee'
       fullPath: '/executive-committee'
       preLoaderRoute: typeof ExecutiveCommitteeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -396,6 +416,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DistrictsRoute: DistrictsRoute,
   ExecutiveCommitteeRoute: ExecutiveCommitteeRoute,
+  GalleryRoute: GalleryRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   EventsIdRoute: EventsIdRoute,
   EventsIndexRoute: EventsIndexRoute,

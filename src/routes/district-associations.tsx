@@ -10,7 +10,7 @@ import { districtsQuery } from "@/lib/queries";
 import { Empty, ErrorState, Loading, PageTitle } from "@/components/site/States";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/district-associations")({
+export const Route = createFileRoute("/districts")({
   staticData: { sitemap: true },
   loader: async ({ context }) => {
     const [districts, settings] = await Promise.all([
