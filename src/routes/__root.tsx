@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Toaster } from "@/components/ui/sonner";
 import { siteSettingsQuery } from "@/lib/site-settings";
+import { contactQuery } from "@/lib/queries";
 
 function NotFoundComponent() {
   return (
@@ -65,6 +66,13 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   staticData: { sitemap: false },
+  loader: async ({ context, location }) => {
+    if (location.pathname.startsWith("/admin")) return;
+    await Promise.all([
+      context.queryClient.ensureQueryData(contactQuery),
+      context.queryClient.ensureQueryData(siteSettingsQuery),
+    ]);
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
