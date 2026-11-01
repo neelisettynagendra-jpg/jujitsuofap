@@ -13,8 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DistrictAssociationsRouteImport } from './routes/district-associations'
+import { Route as DistrictMembersRouteImport } from './routes/district-members'
 import { Route as DistrictsRouteImport } from './routes/districts'
 import { Route as ExecutiveCommitteeRouteImport } from './routes/executive-committee'
+import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAboutRouteImport } from './routes/admin.about'
@@ -47,6 +50,16 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DistrictAssociationsRoute = DistrictAssociationsRouteImport.update({
+  id: '/district-associations',
+  path: '/district-associations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DistrictMembersRoute = DistrictMembersRouteImport.update({
+  id: '/district-members',
+  path: '/district-members',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DistrictsRoute = DistrictsRouteImport.update({
   id: '/districts',
   path: '/districts',
@@ -55,6 +68,11 @@ const DistrictsRoute = DistrictsRouteImport.update({
 const ExecutiveCommitteeRoute = ExecutiveCommitteeRouteImport.update({
   id: '/executive-committee',
   path: '/executive-committee',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -118,8 +136,11 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
+  '/district-associations': typeof DistrictAssociationsRoute
+  '/district-members': typeof DistrictMembersRoute
   '/districts': typeof DistrictsRoute
   '/executive-committee': typeof ExecutiveCommitteeRoute
+  '/gallery': typeof GalleryRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/contact': typeof AdminContactRoute
@@ -136,8 +157,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/district-associations': typeof DistrictAssociationsRoute
+  '/district-members': typeof DistrictMembersRoute
   '/districts': typeof DistrictsRoute
   '/executive-committee': typeof ExecutiveCommitteeRoute
+  '/gallery': typeof GalleryRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/contact': typeof AdminContactRoute
@@ -156,8 +180,11 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
+  '/district-associations': typeof DistrictAssociationsRoute
+  '/district-members': typeof DistrictMembersRoute
   '/districts': typeof DistrictsRoute
   '/executive-committee': typeof ExecutiveCommitteeRoute
+  '/gallery': typeof GalleryRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/contact': typeof AdminContactRoute
@@ -177,8 +204,11 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/contact'
+    | '/district-associations'
+    | '/district-members'
     | '/districts'
     | '/executive-committee'
+    | '/gallery'
     | '/sitemap.xml'
     | '/admin/about'
     | '/admin/contact'
@@ -195,8 +225,11 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/district-associations'
+    | '/district-members'
     | '/districts'
     | '/executive-committee'
+    | '/gallery'
     | '/sitemap.xml'
     | '/admin/about'
     | '/admin/contact'
@@ -214,8 +247,11 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/contact'
+    | '/district-associations'
+    | '/district-members'
     | '/districts'
     | '/executive-committee'
+    | '/gallery'
     | '/sitemap.xml'
     | '/admin/about'
     | '/admin/contact'
@@ -234,8 +270,11 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   ContactRoute: typeof ContactRoute
+  DistrictAssociationsRoute: typeof DistrictAssociationsRoute
+  DistrictMembersRoute: typeof DistrictMembersRoute
   DistrictsRoute: typeof DistrictsRoute
   ExecutiveCommitteeRoute: typeof ExecutiveCommitteeRoute
+  GalleryRoute: typeof GalleryRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   EventsIdRoute: typeof EventsIdRoute
   EventsIndexRoute: typeof EventsIndexRoute
@@ -271,6 +310,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/district-associations': {
+      id: '/district-associations'
+      path: '/district-associations'
+      fullPath: '/district-associations'
+      preLoaderRoute: typeof DistrictAssociationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/district-members': {
+      id: '/district-members'
+      path: '/district-members'
+      fullPath: '/district-members'
+      preLoaderRoute: typeof DistrictMembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/districts': {
       id: '/districts'
       path: '/districts'
@@ -283,6 +336,13 @@ declare module '@tanstack/react-router' {
       path: '/executive-committee'
       fullPath: '/executive-committee'
       preLoaderRoute: typeof ExecutiveCommitteeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -394,8 +454,11 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   ContactRoute: ContactRoute,
+  DistrictAssociationsRoute: DistrictAssociationsRoute,
+  DistrictMembersRoute: DistrictMembersRoute,
   DistrictsRoute: DistrictsRoute,
   ExecutiveCommitteeRoute: ExecutiveCommitteeRoute,
+  GalleryRoute: GalleryRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   EventsIdRoute: EventsIdRoute,
   EventsIndexRoute: EventsIndexRoute,

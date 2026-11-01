@@ -1,6 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { publicContentClient, publicResult } from "./public-content.server";
+import { latestEventOrder } from "./latest-events";
+
+export const getPublicLatestEvents = createServerFn({ method: "GET" }).handler(() =>
+  publicResult(latestEventOrder(publicContentClient().from("events").select("id,title,description,event_date,image_url,created_at,updated_at")))
+);
 
 export const getPublicEvents = createServerFn({ method: "GET" })
   .inputValidator((input: { limit?: number }) => z.object({ limit: z.number().int().min(1).max(100).optional() }).parse(input))

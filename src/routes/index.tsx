@@ -6,9 +6,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { CalendarDays, Info, Phone, Users } from "lucide-react";
 import hero from "@/assets/hero.jpg";
-import { aboutQuery, eventsQuery } from "@/lib/queries";
-import { EventCard } from "@/components/site/EventCard";
-import { Empty, ErrorState, Loading } from "@/components/site/States";
+import emblem from "@/assets/emblem.png";
+import { aboutQuery, latestEventsQuery, galleryQuery, formatDate } from "@/lib/queries";
+import { GalleryGrid } from "@/components/site/GalleryGrid";
+import { HOME_CONTENT_REFRESH_MS } from "@/lib/latest-events";
+import { Empty, Loading } from "@/components/site/States";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -16,8 +18,9 @@ export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     const [about, events, settings] = await Promise.all([
       context.queryClient.ensureQueryData(aboutQuery),
-      context.queryClient.ensureQueryData(eventsQuery(3)),
+      context.queryClient.ensureQueryData(latestEventsQuery),
       context.queryClient.ensureQueryData(siteSettingsQuery),
+      context.queryClient.ensureQueryData(galleryQuery),
     ]);
     return { about, events, logo: settings?.logo_url };
   },
@@ -30,13 +33,14 @@ export const Route = createFileRoute("/")({
 
 const QUICK = [
   { to: "/about", label: "About Us", icon: Info },
-  { to: "/districts", label: "District Members", icon: Users },
+  { to: "/district-associations", label: "District Associations", icon: Users },
   { to: "/events", label: "Event Updates", icon: CalendarDays },
   { to: "/contact", label: "Contact Us", icon: Phone },
 ] as const;
 
 function Home() {
-  const events = useSuspenseQuery(eventsQuery(3));
+  const events = useSuspenseQuery(latestEventsQuery);
+  const gallery = useSuspenseQuery({ ...galleryQuery, refetchInterval: HOME_CONTENT_REFRESH_MS });
   const about = useSuspenseQuery(aboutQuery);
 
   return (
@@ -50,9 +54,43 @@ function Home() {
           <p className="mt-4 max-w-xl text-lg text-primary-foreground/90">Discipline · Strength · Self-Defence — building champions in every district of the state.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button asChild variant="saffron" size="lg"><Link to="/events">Latest Events</Link></Button>
-            <Button asChild variant="outlineLight" size="lg"><Link to="/districts">Find Your District</Link></Button>
+            <Button asChild variant="outlineLight" size="lg"><Link to="/district-associations">Find Your District</Link></Button>
           </div>
         </div>
+      </section>
+
+      {!!events.data?.length && <section className="bg-secondary py-12">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-primary">Latest Events</h2>
+              <div className="mt-2 h-1 w-12 bg-saffron" />
+            </div>
+            <Link to="/events" className="text-sm font-semibold text-primary hover:underline">View all</Link>
+          </div>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {events.data?.map(event => <article key={event.id} className="group flex flex-col overflow-hidden rounded-md border bg-card shadow-card transition hover:border-primary/40">
+              <div className="aspect-[16/9] overflow-hidden bg-secondary">
+                {event.image_url ? <img src={event.image_url} alt={event.title} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" /> : <div className="flex h-full items-center justify-center"><img src={emblem} alt="Ju Jitsu event emblem" loading="lazy" className="h-20 w-20 opacity-40" /></div>}
+              </div>
+              <div className="flex flex-1 flex-col p-4">
+                <p className="flex items-center gap-1.5 text-xs font-semibold text-accent-foreground"><CalendarDays className="h-3.5 w-3.5" />{formatDate(event.event_date)}</p>
+                <h3 className="mt-1.5 text-lg font-bold leading-snug text-primary">{event.title}</h3>
+                <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{event.description}</p>
+                <Link to="/events" className="mt-auto pt-3 text-sm font-semibold text-primary hover:underline">View Details →</Link>
+              </div>
+            </article>)}
+          </div>
+        </div>
+      </section>}
+
+      <section className="mx-auto max-w-6xl px-4 py-12">
+        <h2 className="text-2xl font-bold text-primary">Gallery</h2>
+        <div className="mt-2 h-1 w-12 bg-saffron" />
+        <div className="mt-6">
+          {gallery.data?.length ? <GalleryGrid images={gallery.data} reveal /> : <Empty>No photos in the gallery yet.</Empty>}
+        </div>
+        <Button asChild variant="outline" className="mt-6 min-h-11"><Link to="/gallery">View Full Gallery</Link></Button>
       </section>
 
       <section className="relative z-10 mx-auto -mt-8 grid max-w-6xl grid-cols-2 gap-3 px-4 md:grid-cols-4">
@@ -77,30 +115,6 @@ function Home() {
         <Link to="/about" className="mt-3 inline-block font-semibold text-primary hover:underline">Know more about us →</Link>
       </section>
 
-      <section className="bg-secondary py-12">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-bold text-primary">Latest Event Updates</h2>
-              <div className="mt-2 h-1 w-12 bg-saffron" />
-            </div>
-            <Link to="/events" className="text-sm font-semibold text-primary hover:underline">View all</Link>
-          </div>
-          <div className="mt-6">
-            {events.isLoading ? (
-              <Loading />
-            ) : events.error ? (
-              <ErrorState error={events.error} retry={() => events.refetch()} />
-            ) : events.data?.length ? (
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {events.data.map((e) => <EventCard key={e.id} event={e} />)}
-              </div>
-            ) : (
-              <Empty>No events published yet.</Empty>
-            )}
-          </div>
-        </div>
-      </section>
     </>
   );
 }
