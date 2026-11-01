@@ -12,7 +12,7 @@ export const eventsQuery = (limit?: number) =>
   queryOptions({
     queryKey: ["events", limit ?? "all"],
     staleTime: 30_000,
-    queryFn: () => getPublicEvents({ data: { limit } }),
+    queryFn: () => getPublicEvents({ data: limit === undefined ? {} : { limit } }),
   });
 
 export const eventQuery = (id: string) =>

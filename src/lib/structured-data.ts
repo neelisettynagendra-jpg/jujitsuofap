@@ -26,7 +26,7 @@ export function eventSchema(event: EventData): Node | null {
   };
 }
 
-export function structuredData(path: string, label: string, options: { contact?: ContactData | null; events?: EventData[] } = {}) {
+export function structuredData(path: string, label: string, options: { contact?: ContactData | null | undefined; events?: EventData[] | null | undefined } = {}) {
   const nodes: Node[] = [];
   if (path === "/" || path === "/about") nodes.push(organizationSchema());
   if (path === "/") nodes.push({ "@type": "WebSite", "@id": `${SITE_URL}/#website`, name: ORGANIZATION_NAME, url: `${SITE_URL}/`, publisher: { "@id": organizationId } });

@@ -2,28 +2,30 @@ import { describe, expect, it } from "vitest";
 import { eventSchema, structuredData } from "@/lib/structured-data";
 
 function graph(path: string, options = {}) {
-  return JSON.parse(structuredData(path, "Page", options)[0].children)["@graph"] as Record<string, unknown>[];
+  const script = structuredData(path, "Page", options)[0];
+  if (!script) throw new Error("Missing schema");
+  return JSON.parse(script.children)["@graph"] as Record<string, unknown>[];
 }
 
 describe("Accurate public structured data", () => {
   it("uses the official organization and production URL once on home", () => {
     const nodes = graph("/");
-    expect(nodes[0].name).toBe("Ju Jitsu Association of Andhra Pradesh");
-    expect(nodes[0].url).toBe("https://www.jujitsuassociationofandhrapradesh.in/");
-    expect(nodes[0]["@type"]).toEqual(["Organization", "SportsOrganization"]);
+    expect(nodes[0]?.["name"]).toBe("Ju Jitsu Association of Andhra Pradesh");
+    expect(nodes[0]?.["url"]).toBe("https://www.jujitsuassociationofandhrapradesh.in/");
+    expect(nodes[0]?.["@type"]).toEqual(["Organization", "SportsOrganization"]);
     expect(new Set(nodes.map(node => node["@id"])).size).toBe(nodes.length);
   });
   it("includes only verified contact values and never an address", () => {
     const nodes = graph("/contact", { contact: { phones: ["9885644031", "1234567890"], emails: ["sk.yaseen700@gmail.com", "example@example.com"], address: "Unverified address" } });
     const contact = nodes.find(node => node["@type"] === "ContactPoint");
-    expect(contact?.telephone).toBe("9885644031");
-    expect(contact?.email).toBe("sk.yaseen700@gmail.com");
+    expect(contact?.["telephone"]).toBe("9885644031");
+    expect(contact?.["email"]).toBe("sk.yaseen700@gmail.com");
     expect(JSON.stringify(nodes)).not.toContain("Unverified address");
     expect(JSON.stringify(nodes)).not.toContain("example@example.com");
   });
   it("never invents an event location, time, image, or description", () => {
     const node = eventSchema({ id: "actual-event", title: "Actual event", event_date: "2026-11-01", description: "", image_url: null });
-    expect(node?.startDate).toBe("2026-11-01");
+    expect(node?.["startDate"]).toBe("2026-11-01");
     for (const key of ["location", "image", "description", "endDate", "organizer", "offers"]) expect(node).not.toHaveProperty(key);
   });
   it("rejects invalid event dates instead of producing false event schema", () => {
@@ -35,7 +37,7 @@ describe("Accurate public structured data", () => {
   it("self-references each inner page in breadcrumbs", () => {
     for (const path of ["/about", "/contact", "/districts", "/events", "/executive-committee"]) {
       const breadcrumb = graph(path).find(node => node["@type"] === "BreadcrumbList");
-      expect(breadcrumb?.itemListElement).toEqual([
+      expect(breadcrumb?.["itemListElement"]).toEqual([
         { "@type": "ListItem", position: 1, name: "Home", item: "https://www.jujitsuassociationofandhrapradesh.in/" },
         { "@type": "ListItem", position: 2, name: "Page", item: `https://www.jujitsuassociationofandhrapradesh.in${path}` },
       ]);
