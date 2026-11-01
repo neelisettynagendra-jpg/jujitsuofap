@@ -10,6 +10,8 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
+- Home latest events use a separate updated-at ordered, three-row query under the existing events invalidation key; home events/gallery poll while visible so external admin saves appear without changing the database or Event Updates ordering.
+- The full Gallery route and Home share a gallery grid; legacy district URLs permanently redirect to the canonical district associations route to preserve public links.
 - Public content query options use publishable-key server functions with explicit public column projections and RLS; route loaders prime per-request Query caches, dehydrated by the router for SSR without duplicate hydration reads. Admin mutations retain the browser client and existing invalidation keys.
 - /admin is a client-only layout (ssr: false) that renders the login form instead of <Outlet /> until the user has the admin role in user_roles.
 - Single-admin access is pinned to the designated existing auth user ID in the database role helper, with one admin role allowed; the auth creation trigger rejects additional accounts so public signup cannot grant access.

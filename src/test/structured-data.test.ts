@@ -55,7 +55,7 @@ describe("Accurate public structured data", () => {
     expect(graph("/events", { events: [] }).some(node => node["@type"] === "Event")).toBe(false);
   });
   it("self-references each inner page in breadcrumbs", () => {
-    for (const path of ["/about", "/contact", "/districts", "/events", "/executive-committee"]) {
+    for (const path of ["/about", "/contact", "/district-associations", "/events", "/executive-committee", "/gallery"]) {
       const breadcrumb = graph(path).find(node => node["@type"] === "BreadcrumbList");
       expect(breadcrumb?.["itemListElement"]).toEqual([
         { "@type": "ListItem", position: 1, name: "Home", item: "https://www.jujitsuassociationofandhrapradesh.in/" },
