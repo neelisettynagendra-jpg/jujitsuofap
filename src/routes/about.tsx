@@ -1,7 +1,9 @@
-import { getPublicSEO } from "@/lib/seo.functions";
+import { siteSettingsQuery } from "@/lib/site-settings";
+import { structuredData } from "@/lib/structured-data";
+import { PublicNotFound, PublicRouteError } from "@/components/site/PublicRouteStates";
 import { pageSEO } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { aboutQuery, bearersQuery, galleryQuery } from "@/lib/queries";
 import { Empty, ErrorState, Loading, PageTitle } from "@/components/site/States";
@@ -9,8 +11,19 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/about")({
   staticData: { sitemap: true },
-  loader: () => getPublicSEO({ data: {} }),
-  head: ({ loaderData }) => pageSEO("/about", "About — Ju Jitsu Association of Andhra Pradesh", "Learn the history, mission and leadership of Ju Jitsu Andhra Pradesh, with office bearers and photos from the Jiu Jitsu Association AP.", loaderData?.logo),
+  loader: async ({ context }) => {
+    const [about, bearers, gallery, settings] = await Promise.all([
+      context.queryClient.ensureQueryData(aboutQuery),
+      context.queryClient.ensureQueryData(bearersQuery),
+      context.queryClient.ensureQueryData(galleryQuery),
+      context.queryClient.ensureQueryData(siteSettingsQuery),
+    ]);
+    return { about, bearers, gallery, logo: settings?.logo_url };
+  },
+  head: ({ loaderData }) => ({ ...pageSEO("/about", "About — Ju Jitsu Association of Andhra Pradesh", "Learn the history, mission and leadership of Ju Jitsu Andhra Pradesh, with office bearers and photos from the Jiu Jitsu Association AP.", loaderData?.logo), scripts: structuredData("/about", "About", {}) }),
+  pendingComponent: Loading,
+  errorComponent: PublicRouteError,
+  notFoundComponent: PublicNotFound,
   component: About,
 });
 
@@ -25,9 +38,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function About() {
-  const about = useQuery(aboutQuery);
-  const bearers = useQuery(bearersQuery);
-  const gallery = useQuery(galleryQuery);
+  const about = useSuspenseQuery(aboutQuery);
+  const bearers = useSuspenseQuery(bearersQuery);
+  const gallery = useSuspenseQuery(galleryQuery);
   const [preview, setPreview] = useState<{ url: string; caption: string } | null>(null);
 
   return (

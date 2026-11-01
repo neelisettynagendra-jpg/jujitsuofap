@@ -1,21 +1,32 @@
-import { getPublicSEO } from "@/lib/seo.functions";
+import { siteSettingsQuery } from "@/lib/site-settings";
+import { structuredData } from "@/lib/structured-data";
+import { PublicNotFound, PublicRouteError } from "@/components/site/PublicRouteStates";
 import { pageSEO } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, CalendarDays } from "lucide-react";
 import { eventQuery, formatDate } from "@/lib/queries";
 import { Empty, ErrorState, Loading } from "@/components/site/States";
 
 export const Route = createFileRoute("/events/$id")({
   staticData: { sitemap: false },
-  loader: ({ params }) => getPublicSEO({ data: { eventId: params.id } }),
-  head: ({ loaderData, params }) => pageSEO(`/events/${params.id}`, loaderData?.event?.title ? `${loaderData.event.title} — Ju Jitsu AP` : "Event Details — Ju Jitsu Association of Andhra Pradesh", loaderData?.event?.description?.slice(0, 160) || "Ju Jitsu Andhra Pradesh event information, dates and updates from the Jiu Jitsu Association AP.", loaderData?.logo, loaderData?.event?.image_url),
+  loader: async ({ context, params }) => {
+    const [event, settings] = await Promise.all([
+      context.queryClient.ensureQueryData(eventQuery(params.id)),
+      context.queryClient.ensureQueryData(siteSettingsQuery),
+    ]);
+    return { event, logo: settings?.logo_url };
+  },
+  head: ({ loaderData, params }) => ({ ...pageSEO(`/events/${params.id}`, loaderData?.event?.title ? `${loaderData.event.title} — Ju Jitsu AP` : "Event Details — Ju Jitsu Association of Andhra Pradesh", loaderData?.event?.description?.slice(0, 160) || "Ju Jitsu Andhra Pradesh event information, dates and updates from the Jiu Jitsu Association AP.", loaderData?.logo, loaderData?.event?.image_url), scripts: structuredData(`/events/${params.id}`, "Event Details", { events: loaderData?.event ? [loaderData.event] : [] }) }),
+  pendingComponent: Loading,
+  errorComponent: PublicRouteError,
+  notFoundComponent: PublicNotFound,
   component: EventDetail,
 });
 
 function EventDetail() {
   const { id } = Route.useParams();
-  const { data, isLoading, error, refetch } = useQuery(eventQuery(id));
+  const { data, isLoading, error, refetch } = useSuspenseQuery(eventQuery(id));
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">

@@ -1,7 +1,9 @@
-import { getPublicSEO } from "@/lib/seo.functions";
+import { siteSettingsQuery } from "@/lib/site-settings";
+import { structuredData } from "@/lib/structured-data";
+import { PublicNotFound, PublicRouteError } from "@/components/site/PublicRouteStates";
 import { pageSEO } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -16,8 +18,17 @@ import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/contact")({
   staticData: { sitemap: true },
-  loader: () => getPublicSEO({ data: {} }),
-  head: ({ loaderData }) => pageSEO("/contact", "Contact Us — Ju Jitsu Association of Andhra Pradesh", "Contact Ju Jitsu Andhra Pradesh for district enquiries, events and association information. Reach the Jiu Jitsu Association AP by phone, email or enquiry.", loaderData?.logo),
+  loader: async ({ context }) => {
+    const [contact, settings] = await Promise.all([
+      context.queryClient.ensureQueryData(contactQuery),
+      context.queryClient.ensureQueryData(siteSettingsQuery),
+    ]);
+    return { contact, logo: settings?.logo_url };
+  },
+  head: ({ loaderData }) => ({ ...pageSEO("/contact", "Contact Us — Ju Jitsu Association of Andhra Pradesh", "Contact Ju Jitsu Andhra Pradesh for district enquiries, events and association information. Reach the Jiu Jitsu Association AP by phone, email or enquiry.", loaderData?.logo), scripts: structuredData("/contact", "Contact Us", { contact: loaderData?.contact }) }),
+  pendingComponent: Loading,
+  errorComponent: PublicRouteError,
+  notFoundComponent: PublicNotFound,
   component: Contact,
 });
 
@@ -29,7 +40,7 @@ const schema = z.object({
 });
 
 function Contact() {
-  const { data, isLoading, error, refetch } = useQuery(contactQuery);
+  const { data, isLoading, error, refetch } = useSuspenseQuery(contactQuery);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [errors, setErrors] = useState<Partial<Record<"name" | "email" | "phone" | "message", string>>>({});
   const [sending, setSending] = useState(false);

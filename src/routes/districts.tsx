@@ -1,7 +1,9 @@
-import { getPublicSEO } from "@/lib/seo.functions";
+import { siteSettingsQuery } from "@/lib/site-settings";
+import { structuredData } from "@/lib/structured-data";
+import { PublicNotFound, PublicRouteError } from "@/components/site/PublicRouteStates";
 import { pageSEO } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Mail, MapPin, Phone, Search, User } from "lucide-react";
 import { districtsQuery } from "@/lib/queries";
@@ -10,13 +12,22 @@ import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/districts")({
   staticData: { sitemap: true },
-  loader: () => getPublicSEO({ data: {} }),
-  head: ({ loaderData }) => pageSEO("/districts", "District Members — Ju Jitsu Association of Andhra Pradesh", "Find Ju Jitsu Andhra Pradesh district units, presidents, secretaries and coordinator contacts through the official Jiu Jitsu Association AP.", loaderData?.logo),
+  loader: async ({ context }) => {
+    const [districts, settings] = await Promise.all([
+      context.queryClient.ensureQueryData(districtsQuery),
+      context.queryClient.ensureQueryData(siteSettingsQuery),
+    ]);
+    return { districts, logo: settings?.logo_url };
+  },
+  head: ({ loaderData }) => ({ ...pageSEO("/districts", "District Members — Ju Jitsu Association of Andhra Pradesh", "Find Ju Jitsu Andhra Pradesh district units, presidents, secretaries and coordinator contacts through the official Jiu Jitsu Association AP.", loaderData?.logo), scripts: structuredData("/districts", "District Members", {}) }),
+  pendingComponent: Loading,
+  errorComponent: PublicRouteError,
+  notFoundComponent: PublicNotFound,
   component: Districts,
 });
 
 function Districts() {
-  const { data, isLoading, error, refetch } = useQuery(districtsQuery);
+  const { data, isLoading, error, refetch } = useSuspenseQuery(districtsQuery);
   const [q, setQ] = useState("");
   const list = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -32,6 +43,7 @@ function Districts() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by district or coordinator" className="h-11 bg-card pl-9" aria-label="Search districts" />
         </div>
+        <h2 className="sr-only">Affiliated District Associations</h2>
         <div className="mt-6">
           {isLoading ? (
             <Loading />

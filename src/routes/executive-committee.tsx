@@ -1,18 +1,30 @@
-import { getPublicSEO } from "@/lib/seo.functions";
+import { executiveMembersQuery } from "@/lib/queries";
+import { siteSettingsQuery } from "@/lib/site-settings";
+import { structuredData } from "@/lib/structured-data";
+import { PublicNotFound, PublicRouteError } from "@/components/site/PublicRouteStates";
 import { pageSEO } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
-import { useExecutiveMembers } from "@/hooks/use-executive-members";
+import { usePublicExecutiveMembers } from "@/hooks/use-executive-members";
 import { Empty, ErrorState, Loading, PageTitle } from "@/components/site/States";
 
 export const Route = createFileRoute("/executive-committee")({
   staticData: { sitemap: true },
-  loader: () => getPublicSEO({ data: {} }),
-  head: ({ loaderData }) => pageSEO("/executive-committee", "Executive Committee — Ju Jitsu Association of Andhra Pradesh", "Meet the Ju Jitsu Andhra Pradesh Executive Committee and discover the names and roles of the official Jiu Jitsu Association AP leadership.", loaderData?.logo),
+  loader: async ({ context }) => {
+    const [members, settings] = await Promise.all([
+      context.queryClient.ensureQueryData(executiveMembersQuery),
+      context.queryClient.ensureQueryData(siteSettingsQuery),
+    ]);
+    return { members, logo: settings?.logo_url };
+  },
+  head: ({ loaderData }) => ({ ...pageSEO("/executive-committee", "Executive Committee — Ju Jitsu Association of Andhra Pradesh", "Meet the Ju Jitsu Andhra Pradesh Executive Committee and discover the names and roles of the official Jiu Jitsu Association AP leadership.", loaderData?.logo), scripts: structuredData("/executive-committee", "Executive Committee", {}) }),
+  pendingComponent: Loading,
+  errorComponent: PublicRouteError,
+  notFoundComponent: PublicNotFound,
   component: ExecutiveCommittee,
 });
 
 function ExecutiveCommittee() {
-  const { data, isLoading, error, refetch } = useExecutiveMembers();
+  const { data, isLoading, error, refetch } = usePublicExecutiveMembers();
   return <>
     <PageTitle title="Executive Committee" />
     <div className="mx-auto max-w-6xl px-4 py-8">

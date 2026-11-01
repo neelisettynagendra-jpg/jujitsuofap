@@ -1,7 +1,9 @@
-import { getPublicSEO } from "@/lib/seo.functions";
+import { siteSettingsQuery } from "@/lib/site-settings";
+import { structuredData } from "@/lib/structured-data";
+import { PublicNotFound, PublicRouteError } from "@/components/site/PublicRouteStates";
 import { pageSEO, HOME_DESCRIPTION } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { CalendarDays, Info, Phone, Users } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import { aboutQuery, eventsQuery } from "@/lib/queries";
@@ -11,8 +13,18 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
-  loader: () => getPublicSEO({ data: { home: true } }),
-  head: ({ loaderData }) => pageSEO("/", "Ju Jitsu Association of Andhra Pradesh", HOME_DESCRIPTION, loaderData?.logo, loaderData?.banner),
+  loader: async ({ context }) => {
+    const [about, events, settings] = await Promise.all([
+      context.queryClient.ensureQueryData(aboutQuery),
+      context.queryClient.ensureQueryData(eventsQuery(3)),
+      context.queryClient.ensureQueryData(siteSettingsQuery),
+    ]);
+    return { about, events, logo: settings?.logo_url };
+  },
+  head: ({ loaderData }) => ({ ...pageSEO("/", "Ju Jitsu Association of Andhra Pradesh", HOME_DESCRIPTION, loaderData?.logo, loaderData?.about?.home_banner_url), scripts: structuredData("/", "Home", { events: loaderData?.events }) }),
+  pendingComponent: Loading,
+  errorComponent: PublicRouteError,
+  notFoundComponent: PublicNotFound,
   component: Home,
 });
 
@@ -24,8 +36,8 @@ const QUICK = [
 ] as const;
 
 function Home() {
-  const events = useQuery(eventsQuery(3));
-  const about = useQuery(aboutQuery);
+  const events = useSuspenseQuery(eventsQuery(3));
+  const about = useSuspenseQuery(aboutQuery);
 
   return (
     <>
