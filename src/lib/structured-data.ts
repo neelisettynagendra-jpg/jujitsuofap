@@ -6,8 +6,17 @@ type Node = Record<string, unknown>;
 type EventData = { id: string; title: string; event_date: string; description: string; image_url: string | null };
 type ContactData = { phones: string[]; emails: string[] };
 
-export function organizationSchema() {
-  return { "@type": ["Organization", "SportsOrganization"], "@id": organizationId, name: ORGANIZATION_NAME, url: `${SITE_URL}/` };
+export function organizationSchema(logo?: string | null) {
+  // Only absolute HTTPS raster images are eligible; relative fallback paths and
+  // SVGs are omitted so Google never receives an unusable logo URL.
+  const logoUrl = logo?.startsWith("https://") && !/\.svg(?:\?|$)/i.test(logo) ? logo : null;
+  return {
+    "@type": ["Organization", "SportsOrganization"],
+    "@id": organizationId,
+    name: ORGANIZATION_NAME,
+    url: `${SITE_URL}/`,
+    ...(logoUrl ? { logo: { "@type": "ImageObject", url: logoUrl } } : {}),
+  };
 }
 
 export function breadcrumbSchema(path: string, label: string) {
@@ -26,9 +35,9 @@ export function eventSchema(event: EventData): Node | null {
   };
 }
 
-export function structuredData(path: string, label: string, options: { contact?: ContactData | null | undefined; events?: EventData[] | null | undefined } = {}) {
+export function structuredData(path: string, label: string, options: { contact?: ContactData | null | undefined; events?: EventData[] | null | undefined; logo?: string | null | undefined } = {}) {
   const nodes: Node[] = [];
-  if (path === "/" || path === "/about") nodes.push(organizationSchema());
+  if (path === "/" || path === "/about") nodes.push(organizationSchema(options.logo));
   if (path === "/") nodes.push({ "@type": "WebSite", "@id": `${SITE_URL}/#website`, name: ORGANIZATION_NAME, url: `${SITE_URL}/`, publisher: { "@id": organizationId } });
   else nodes.push(breadcrumbSchema(path, label));
   if (path === "/contact") {

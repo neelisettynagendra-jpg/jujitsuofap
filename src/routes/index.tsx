@@ -21,7 +21,7 @@ export const Route = createFileRoute("/")({
     ]);
     return { about, events, logo: settings?.logo_url };
   },
-  head: ({ loaderData }) => ({ ...pageSEO("/", "Ju Jitsu Association of Andhra Pradesh", HOME_DESCRIPTION, loaderData?.logo, loaderData?.about?.home_banner_url), scripts: structuredData("/", "Home", { events: loaderData?.events }) }),
+  head: ({ loaderData }) => ({ ...pageSEO("/", "Ju Jitsu Association of Andhra Pradesh", HOME_DESCRIPTION, loaderData?.logo, loaderData?.about?.home_banner_url), scripts: structuredData("/", "Home", { events: loaderData?.events, logo: loaderData?.logo }) }),
   pendingComponent: Loading,
   errorComponent: PublicRouteError,
   notFoundComponent: PublicNotFound,

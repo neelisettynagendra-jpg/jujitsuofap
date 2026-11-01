@@ -20,7 +20,7 @@ export const Route = createFileRoute("/about")({
     ]);
     return { about, bearers, gallery, logo: settings?.logo_url };
   },
-  head: ({ loaderData }) => ({ ...pageSEO("/about", "About — Ju Jitsu Association of Andhra Pradesh", "Learn the history, mission and leadership of Ju Jitsu Andhra Pradesh, with office bearers and photos from the Jiu Jitsu Association AP.", loaderData?.logo), scripts: structuredData("/about", "About", {}) }),
+  head: ({ loaderData }) => ({ ...pageSEO("/about", "About — Ju Jitsu Association of Andhra Pradesh", "Learn the history, mission and leadership of Ju Jitsu Andhra Pradesh, with office bearers and photos from the Jiu Jitsu Association AP.", loaderData?.logo), scripts: structuredData("/about", "About", { logo: loaderData?.logo }) }),
   pendingComponent: Loading,
   errorComponent: PublicRouteError,
   notFoundComponent: PublicNotFound,
