@@ -59,7 +59,7 @@ function Home() {
         </div>
       </section>
 
-      {!!events.data.length && <section className="bg-secondary py-12">
+      {!!events.data?.length && <section className="bg-secondary py-12">
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex items-end justify-between gap-4">
             <div>
@@ -69,7 +69,7 @@ function Home() {
             <Link to="/events" className="text-sm font-semibold text-primary hover:underline">View all</Link>
           </div>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {events.data.map(event => <article key={event.id} className="group flex flex-col overflow-hidden rounded-md border bg-card shadow-card transition hover:border-primary/40">
+            {events.data?.map(event => <article key={event.id} className="group flex flex-col overflow-hidden rounded-md border bg-card shadow-card transition hover:border-primary/40">
               <div className="aspect-[16/9] overflow-hidden bg-secondary">
                 {event.image_url ? <img src={event.image_url} alt={event.title} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" /> : <div className="flex h-full items-center justify-center"><img src={emblem} alt="Ju Jitsu event emblem" loading="lazy" className="h-20 w-20 opacity-40" /></div>}
               </div>
@@ -88,7 +88,7 @@ function Home() {
         <h2 className="text-2xl font-bold text-primary">Gallery</h2>
         <div className="mt-2 h-1 w-12 bg-saffron" />
         <div className="mt-6">
-          {gallery.data.length ? <GalleryGrid images={gallery.data} reveal /> : <Empty>No photos in the gallery yet.</Empty>}
+          {gallery.data?.length ? <GalleryGrid images={gallery.data} reveal /> : <Empty>No photos in the gallery yet.</Empty>}
         </div>
         <Button asChild variant="outline" className="mt-6 min-h-11"><Link to="/gallery">View Full Gallery</Link></Button>
       </section>

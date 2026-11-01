@@ -26,7 +26,7 @@ function Gallery() {
   return <>
     <PageTitle title="Gallery" />
     <div className="mx-auto max-w-6xl px-4 py-8">
-      {data.length ? <GalleryGrid images={data} /> : <Empty>No photos in the gallery yet.</Empty>}
+      {data?.length ? <GalleryGrid images={data} /> : <Empty>No photos in the gallery yet.</Empty>}
     </div>
   </>;
 }
