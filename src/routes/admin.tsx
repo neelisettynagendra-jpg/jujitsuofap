@@ -30,7 +30,7 @@ export const Route = createFileRoute("/admin")({
 const LINKS = [
   { to: "/admin", label: "Event Updates", icon: CalendarDays },
   { to: "/admin/notices", label: "Notices", icon: Megaphone },
-  { to: "/admin/districts", label: "District Members", icon: Users },
+  { to: "/admin/districts", label: "District Associations", icon: Users },
   { to: "/admin/executive-committee", label: "Executive Committee", icon: Users },
   { to: "/admin/about", label: "About Page", icon: Info },
   { to: "/admin/contact", label: "Contact Details", icon: Phone },

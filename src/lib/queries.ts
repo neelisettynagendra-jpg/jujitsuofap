@@ -1,6 +1,14 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { getPublicAbout, getPublicBearers, getPublicContact, getPublicDistricts, getPublicEvent, getPublicEvents, getPublicExecutiveMembers, getPublicGallery } from "./public-content.functions";
+import { getPublicAbout, getPublicBearers, getPublicContact, getPublicDistricts, getPublicEvent, getPublicEvents, getPublicExecutiveMembers, getPublicGallery, getPublicLatestEvents } from "./public-content.functions";
+import { HOME_CONTENT_REFRESH_MS } from "./latest-events";
+
+export const latestEventsQuery = queryOptions({
+  queryKey: ["events", "latest"],
+  staleTime: 0,
+  refetchInterval: HOME_CONTENT_REFRESH_MS,
+  queryFn: () => getPublicLatestEvents(),
+});
 
 async function run<T>(p: PromiseLike<{ data: T; error: { message: string } | null }>): Promise<T> {
   const { data, error } = await p;

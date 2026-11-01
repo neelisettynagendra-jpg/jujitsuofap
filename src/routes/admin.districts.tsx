@@ -15,9 +15,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 export const Route = createFileRoute("/admin/districts")({
   staticData: { sitemap: false },
   head: () => ({ meta: [
-    { title: "Manage District Members — Ju Jitsu AP" },
+    { title: "Manage District Associations — Ju Jitsu AP" },
     { name: "description", content: "Manage district contacts and leadership." },
-    { property: "og:title", content: "Manage District Members — Ju Jitsu AP" },
+    { property: "og:title", content: "Manage District Associations — Ju Jitsu AP" },
     { property: "og:description", content: "Manage district contacts and leadership." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
@@ -66,7 +66,7 @@ function AdminDistricts() {
 
   return (
     <>
-      <AdminHeader title="District Members" action={<Button onClick={() => edit(null)}><Plus /> Add district</Button>} />
+      <AdminHeader title="District Associations" action={<Button onClick={() => edit(null)}><Plus /> Add district</Button>} />
       {isLoading ? <Loading /> : error ? <ErrorState error={error} retry={() => refetch()} /> : !data?.length ? <Empty>No districts yet.</Empty> : (
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {data.map((d) => (

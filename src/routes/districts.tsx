@@ -10,7 +10,7 @@ import { districtsQuery } from "@/lib/queries";
 import { Empty, ErrorState, Loading, PageTitle } from "@/components/site/States";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/districts")({
+export const Route = createFileRoute("/district-associations")({
   staticData: { sitemap: true },
   loader: async ({ context }) => {
     const [districts, settings] = await Promise.all([
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/districts")({
     ]);
     return { districts, logo: settings?.logo_url };
   },
-  head: ({ loaderData }) => ({ ...pageSEO("/districts", "District Members — Ju Jitsu Association of Andhra Pradesh", "Find Ju Jitsu Andhra Pradesh district units, presidents, secretaries and coordinator contacts through the official Jiu Jitsu Association AP.", loaderData?.logo), scripts: structuredData("/districts", "District Members", {}) }),
+  head: ({ loaderData }) => ({ ...pageSEO("/district-associations", "District Associations — Ju Jitsu Association of Andhra Pradesh", "Find Ju Jitsu Andhra Pradesh district units, presidents, secretaries and coordinator contacts through the official Jiu Jitsu Association AP.", loaderData?.logo), scripts: structuredData("/district-associations", "District Associations", {}) }),
   pendingComponent: Loading,
   errorComponent: PublicRouteError,
   notFoundComponent: PublicNotFound,
@@ -37,7 +37,7 @@ function Districts() {
 
   return (
     <>
-      <PageTitle title="District Members" subtitle="District units and their coordinators" />
+      <PageTitle title="District Associations" subtitle="District units and their coordinators" />
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="relative max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

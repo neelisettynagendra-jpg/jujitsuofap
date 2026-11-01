@@ -10,7 +10,7 @@ import { siteSettingsQuery } from "@/lib/site-settings";
 export const NAV = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
-  { to: "/districts", label: "District Members" },
+  { to: "/district-associations", label: "District Associations" },
   { to: "/executive-committee", label: "Executive Committee" },
   { to: "/events", label: "Event Updates" },
   { to: "/contact", label: "Contact Us" },
