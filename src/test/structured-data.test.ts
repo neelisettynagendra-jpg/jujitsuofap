@@ -15,6 +15,26 @@ describe("Accurate public structured data", () => {
     expect(nodes[0]?.["@type"]).toEqual(["Organization", "SportsOrganization"]);
     expect(new Set(nodes.map(node => node["@id"])).size).toBe(nodes.length);
   });
+  it("includes the uploaded logo as an ImageObject on the organization", () => {
+    const nodes = graph("/", { logo: "https://example.com/logos/official.jpeg" });
+    const org = nodes.find(node => node["@id"] === "https://www.jujitsuassociationofandhrapradesh.in/#organization");
+    expect(org?.["logo"]).toEqual({ "@type": "ImageObject", url: "https://example.com/logos/official.jpeg" });
+    expect(org?.["name"]).toBe("Ju Jitsu Association of Andhra Pradesh");
+    expect(org?.["url"]).toBe("https://www.jujitsuassociationofandhrapradesh.in/");
+  });
+  it("omits the logo when it is missing, relative, or an SVG", () => {
+    for (const logo of [undefined, null, "/__l5e/assets/logo.jpeg", "http://insecure.com/logo.png", "https://example.com/logo.svg", "https://example.com/logo.svg?token=abc"]) {
+      const nodes = graph("/", { logo });
+      const org = nodes.find(node => node["@id"] === "https://www.jujitsuassociationofandhrapradesh.in/#organization");
+      expect(org).not.toHaveProperty("logo");
+    }
+  });
+  it("emits exactly one organization node even with a logo on home and about", () => {
+    for (const path of ["/", "/about"]) {
+      const nodes = graph(path, { logo: "https://example.com/logos/official.jpeg" });
+      expect(nodes.filter(node => node["@id"] === "https://www.jujitsuassociationofandhrapradesh.in/#organization")).toHaveLength(1);
+    }
+  });
   it("includes only verified contact values and never an address", () => {
     const nodes = graph("/contact", { contact: { phones: ["9885644031", "1234567890"], emails: ["sk.yaseen700@gmail.com", "example@example.com"], address: "Unverified address" } });
     const contact = nodes.find(node => node["@type"] === "ContactPoint");
