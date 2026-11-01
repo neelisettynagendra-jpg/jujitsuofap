@@ -1,3 +1,6 @@
+- [ ] Rename district page and preserve legacy URLs with redirects.
+- [ ] Add automatically refreshed latest three events and scroll-revealed Gallery on Home, plus full Gallery destination.
+- [ ] Test selection rules, redirects, and public page interactions.
 - [x] Add accurate JSON-LD and improve district/event heading hierarchy without redesigning.
 - [x] Server-render public content with shared query caching and preserve admin updates.
 - [x] Validate six public pages, structured data, crawler files, and production build reports.
