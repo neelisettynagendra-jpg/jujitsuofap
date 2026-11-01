@@ -2,16 +2,13 @@ import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import defaultLogo from "@/assets/association-logo.jpeg.asset.json";
 import { validateLogo, validateSVG } from "./logo-validation";
+import { getPublicSettings } from "./public-content.functions";
 
 export const DEFAULT_LOGO_URL = defaultLogo.url;
 export const siteSettingsQuery = queryOptions({
   queryKey: ["site-settings"],
-  refetchOnMount: "always",
-  queryFn: async () => {
-    const { data, error } = await supabase.from("site_settings").select("logo_url").eq("id", 1).maybeSingle();
-    if (error) throw error;
-    return data;
-  },
+  staleTime: 30_000,
+  queryFn: () => getPublicSettings(),
 });
 
 export async function saveWebsiteLogo(file: File) {

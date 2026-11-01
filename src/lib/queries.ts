@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getPublicAbout, getPublicBearers, getPublicContact, getPublicDistricts, getPublicEvent, getPublicEvents, getPublicExecutiveMembers, getPublicGallery } from "./public-content.functions";
 
 async function run<T>(p: PromiseLike<{ data: T; error: { message: string } | null }>): Promise<T> {
   const { data, error } = await p;
@@ -10,17 +11,15 @@ async function run<T>(p: PromiseLike<{ data: T; error: { message: string } | nul
 export const eventsQuery = (limit?: number) =>
   queryOptions({
     queryKey: ["events", limit ?? "all"],
-    queryFn: () => {
-      let q = supabase.from("events").select("*").order("event_date", { ascending: false }).order("created_at", { ascending: false });
-      if (limit) q = q.limit(limit);
-      return run(q);
-    },
+    staleTime: 30_000,
+    queryFn: () => getPublicEvents({ data: limit === undefined ? {} : { limit } }),
   });
 
 export const eventQuery = (id: string) =>
   queryOptions({
     queryKey: ["event", id],
-    queryFn: () => run(supabase.from("events").select("*").eq("id", id).maybeSingle()),
+    staleTime: 30_000,
+    queryFn: () => getPublicEvent({ data: { id } }),
   });
 
 export const activeNoticesQuery = queryOptions({
@@ -35,32 +34,38 @@ export const allNoticesQuery = queryOptions({
 
 export const contactQuery = queryOptions({
   queryKey: ["contact"],
-  queryFn: () => run(supabase.from("contact_info").select("*").eq("id", 1).maybeSingle()),
+  staleTime: 30_000,
+  queryFn: () => getPublicContact(),
 });
 
 export const aboutQuery = queryOptions({
   queryKey: ["about"],
-  queryFn: () => run(supabase.from("about_content").select("*").eq("id", 1).maybeSingle()),
+  staleTime: 30_000,
+  queryFn: () => getPublicAbout(),
 });
 
 export const bearersQuery = queryOptions({
   queryKey: ["bearers"],
-  queryFn: () => run(supabase.from("office_bearers").select("*").order("sort_order")),
+  staleTime: 30_000,
+  queryFn: () => getPublicBearers(),
 });
 
 export const galleryQuery = queryOptions({
   queryKey: ["gallery"],
-  queryFn: () => run(supabase.from("gallery_images").select("*").order("created_at", { ascending: false })),
+  staleTime: 30_000,
+  queryFn: () => getPublicGallery(),
 });
 
 export const districtsQuery = queryOptions({
   queryKey: ["districts"],
-  queryFn: () => run(supabase.from("districts").select("*").order("district_name")),
+  staleTime: 30_000,
+  queryFn: () => getPublicDistricts(),
 });
 
 export const executiveMembersQuery = queryOptions({
   queryKey: ["executive-members"],
-  queryFn: () => run(supabase.from("executive_members").select("*").order("sort_order").order("created_at").order("id")),
+  staleTime: 30_000,
+  queryFn: () => getPublicExecutiveMembers(),
 });
 
 export const enquiriesQuery = queryOptions({
