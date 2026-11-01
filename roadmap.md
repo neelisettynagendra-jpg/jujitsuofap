@@ -1,6 +1,6 @@
-- [ ] Add accurate JSON-LD and improve district/event heading hierarchy without redesigning.
-- [ ] Server-render public content with shared query caching and preserve admin updates.
-- [ ] Validate six public pages, structured data, crawler files, and production build reports.
+- [x] Add accurate JSON-LD and improve district/event heading hierarchy without redesigning.
+- [x] Server-render public content with shared query caching and preserve admin updates.
+- [x] Validate six public pages, structured data, crawler files, and production build reports.
 - [x] Add per-page SEO, crawler access, sitemap, and descriptive image alternatives.
 - [x] Add sole-admin website logo uploads, shared logo settings, favicon, and share-image support (private storage with public-readable links because workspace blocks public buckets).
 - [x] Verify SEO and authenticated logo save/readback, including visitor restrictions.
