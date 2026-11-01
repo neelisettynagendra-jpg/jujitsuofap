@@ -1,4 +1,4 @@
-export const SITE_URL = "https://jujitsuofap.lovable.app";
+export const SITE_URL = "https://www.jujitsuassociationofandhrapradesh.in";
 export const HOME_DESCRIPTION = "Ju Jitsu Andhra Pradesh: official Jiu Jitsu Association AP website for events, district members, leadership and enquiries. See state Ju Jitsu updates.";
 
 export function pageSEO(path: string, title: string, description: string, logo?: string | null, image?: string | null) {
